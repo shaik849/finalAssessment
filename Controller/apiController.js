@@ -50,8 +50,8 @@ catch(err){
 
 const profile = async (req, res) => {
     try{
-        if(req.data){
-        const result = await Model.findById(req.data.id)
+        if(req.user){
+        const result = await Model.findById(req.user.id)
       return res.status(200).json({user : {
             email : result.email,
             firstName : result.firstName,

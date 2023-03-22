@@ -10,7 +10,7 @@ const middleware = (req, res, next) => {
                 })
     }
     else{
-        req.data = decoded;
+        req.user = decoded;
         next()
     }
     })
