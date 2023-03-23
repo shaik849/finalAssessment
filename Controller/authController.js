@@ -1,6 +1,6 @@
-const Model = require('../Model/apiModel')
+const Model = require('../Model/authModel')
 const jwt = require("jsonwebtoken")
-const { authSchema } = require('../ErrorHandlar/errorHandler')
+const { authSchema } = require('../AuthHandlar/validator')
 
 function createToken(id){
     return jwt.sign({id}, process.env.SECRET_KEY)

@@ -15,7 +15,7 @@ app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(morgan('dev'))
 
-const router = require("./Router/apiRouter")
+const router = require("./Router/authRouter")
 
 
 app.use("",router)
