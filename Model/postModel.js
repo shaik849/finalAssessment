@@ -6,7 +6,6 @@ const postSchema =  new Schema({
       userId :{
         type : String,
         required : true,
-        unique : true,
         ref: 'user',
       },
     title : {

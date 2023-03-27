@@ -1,44 +1,58 @@
 const {postModel} = require('../Model/postModel');
-const Model = require('../Model/authModel')
 
-const displayPost = async (req, res) =>{
-    console.log(req.params.id)
+const viewSinglePost = async (req, res) =>{
     try{
-        const result = await postModel.findById(req.params.id);
-        console.log(result)
-     if(result){
-        console.log(result)
-       return res.status(200).json(result);
+        const id = req.params.id
+        console.log(id)
+        const singlePost = await postModel.findById({_id : id});
+        if(singlePost){
+       return res.status(200).json(singlePost);
      }
      else{
-        throw Error('Couldn\'t find')
+        throw Error('Couldnt find the post')
      }
     }
     catch(err){
-        console.log(err)
       return  res.status(400).json({message: err.message});
     }
 }
 
-const createPost = async (req, res) =>{
+const viewAllPosts = async (req, res) =>{
     try{
-        console.log(req.user)
-        if(req.user){
-           const getModelData = await postModel.findById(req.user.id);
-           if(getModelData){
-            throw Error("ID is already exist")
-        }
-        else{
-            const result = new postModel({
+       const allPosts = await postModel.find();
+             if(allPosts){
+              res.status(200).json(allPosts)
+             }
+             else{
+                throw Error('Could not find the posts')
+             }
+    }
+    catch(err){
+        res.status(400).json({message: err.message});
+    }
+}
+
+const createPost = async (req, res) =>{
+ try{   
+    if(req.user){
+            const postDetails = new postModel({
                 userId: req.user.id,
                title : req.body.title,
                description : req.body.description
           })
-          await result.save();
+
+          if(postDetails){
+          await postDetails.save();
           res.status(200).json({"message": "success"})
+          }
+        
+        else{
+            throw Error("cant create post")
         }
+    }else{
+        throw Error("user is not available")
     }
-}
+    }
 catch(err){
  return res.status(400).json({message: err.message});
     }
@@ -46,9 +60,10 @@ catch(err){
 
 const updatePost = async (req, res) => {
     try{
-        const checkId = await postModel.findById(req.params.id);
+        const id = req.params.id
+        const checkId = await postModel.findById(id);
         if(checkId){
-       const updatePost = await postModel.updateOne({_id :req.params.id},
+       const updatePost = await postModel.updateOne({_id : id},
             {
                 $set: {
                     title : req.body.title,
@@ -56,7 +71,6 @@ const updatePost = async (req, res) => {
                 }
             })
                if(updatePost){
-                console.log(updatePost)
              return  res.status(200).json({"message": "success"})
         }
         else{
@@ -73,11 +87,12 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
     try{
-        const checkId = await postModel.findById(req.params.id);
+        const id = req.params.id
+        const checkId = await postModel.findById(id);
         if(checkId){
-        const result = await postModel.findByIdAndDelete(req.params.id);
+        const result = await postModel.findByIdAndDelete(id);
      if(result){
-       return res.status(200).json({"message": "successfuly deletes"});
+       return res.status(200).json({"message": "successfuly deleted"});
      }
     }else{
         throw Error("Id is not found")
@@ -89,8 +104,9 @@ const deletePost = async (req, res) => {
 }
 
 module.exports = {
-    displayPost: displayPost,
-   createPost: createPost,
-   updatePost: updatePost,
-   deletePost: deletePost
+    viewSinglePost : viewSinglePost,
+    viewAllPosts : viewAllPosts,
+    createPost : createPost,
+    updatePost : updatePost,
+    deletePost : deletePost
 }

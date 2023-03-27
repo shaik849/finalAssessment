@@ -1,10 +1,12 @@
 const router = require('express').Router();
 
-const { displayPost, createPost, updatePost, deletePost } = require('../Controller/postController')
+const { viewSinglePost, viewAllPosts, createPost, updatePost, deletePost } = require('../Controller/postController')
 
 const middleware = require('../Middleware/authMiddleware')
 
-router.get('/getpost/:id', middleware,displayPost)
+router.get('/view/singlepost/:id', middleware, viewSinglePost)
+
+router.get('/view/allposts', middleware, viewAllPosts)
 
 router.post('/createpost', middleware ,createPost)
 
