@@ -1,6 +1,6 @@
 const {postModel} = require('../Model/postModel');
 
-const viewSinglePost = async (req, res) =>{
+const getSinglePostId = async (req, res) =>{
     try{
         const id = req.params.id
         console.log(id)
@@ -9,7 +9,7 @@ const viewSinglePost = async (req, res) =>{
        return res.status(200).json(singlePost);
      }
      else{
-        throw Error('Couldnt find the post')
+        return res.status(400).json({status: "failure",message:"Couldnt find the post"})
      }
     }
     catch(err){
@@ -17,14 +17,33 @@ const viewSinglePost = async (req, res) =>{
     }
 }
 
-const viewAllPosts = async (req, res) =>{
+const getAllPostsByUserId = async (req, res) =>{
+    try{
+        const id = req.params.id
+        console.log(id)
+        const allPosts = await postModel.find({userId : id});
+        console.log(allPosts)
+        if(allPosts.length > 0){
+       return res.status(200).json({status: "success",posts : allPosts});
+      }
+     else{
+        return res.status(400).json({status: "failure",message:'Couldnt find the posts'})
+     }
+}
+catch(err){
+    return res.status(400).json({status:"failure",error : {message: err.message}});
+} 
+
+}
+
+const getAllPosts = async (req, res) =>{
     try{
        const allPosts = await postModel.find();
              if(allPosts){
               res.status(200).json(allPosts)
              }
              else{
-                throw Error('Could not find the posts')
+                return res.status(400).json({status: "failure",message:'Could not find the posts'})
              }
     }
     catch(err){
@@ -36,25 +55,25 @@ const createPost = async (req, res) =>{
  try{   
     if(req.user){
             const postDetails = new postModel({
-                userId: req.user.id,
+               userId : req.user.id,
                title : req.body.title,
                description : req.body.description
           })
 
           if(postDetails){
           await postDetails.save();
-          res.status(200).json({"message": "success"})
+          res.status(200).json({status:"success",message: "post created successfully"})
           }
         
         else{
-            throw Error("cant create post")
+            return res.status(400).json({status: "failure",message:"cant create post"})
         }
     }else{
-        throw Error("user is not available")
+        return res.status(400).json({status: "failure",message:"user is not available"})
     }
     }
 catch(err){
- return res.status(400).json({message: err.message});
+ return res.status(400).json({status: "failure",error: err.message});
     }
 }
 
@@ -71,17 +90,17 @@ const updatePost = async (req, res) => {
                 }
             })
                if(updatePost){
-             return  res.status(200).json({"message": "success"})
+             return  res.status(200).json({status: "success",message: "post is updated successfully"})
         }
         else{
-            throw Error("cannot update post")
+            res.status(400).json({status: "success",message:"cannot update post"})
         }
     }else{
-        throw Error("Id is not found")
+        res.status(400).json({status: "success",message:"user Id is not found"})
     }
     }
     catch(err){
-        res.status(400).json({error: err.message})
+        res.status(400).json({status: "success",error: err.message})
     }
 }
 
@@ -92,20 +111,21 @@ const deletePost = async (req, res) => {
         if(checkId){
         const result = await postModel.findByIdAndDelete(id);
      if(result){
-       return res.status(200).json({"message": "successfuly deleted"});
+       return res.status(200).json({status: "success",message: "successfuly deleted"});
      }
     }else{
-        throw Error("Id is not found")
+        return res.status(400).json({status: "success",error: err.message})
     }
 }
     catch(err){
-      return  res.status(400).json({error: err.message});
+      return  res.status(400).json({status: "success",error: err.message});
     }
 }
 
 module.exports = {
-    viewSinglePost : viewSinglePost,
-    viewAllPosts : viewAllPosts,
+    getSinglePostId : getSinglePostId,
+    getAllPostsByUserId : getAllPostsByUserId,
+    getAllPosts : getAllPosts,
     createPost : createPost,
     updatePost : updatePost,
     deletePost : deletePost

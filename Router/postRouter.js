@@ -1,12 +1,14 @@
 const router = require('express').Router();
 
-const { viewSinglePost, viewAllPosts, createPost, updatePost, deletePost } = require('../Controller/postController')
+const { getSinglePostId,  getAllPostsByUserId, getAllPosts, createPost, updatePost, deletePost } = require('../Controller/postController')
 
 const middleware = require('../Middleware/authMiddleware')
 
-router.get('/view/singlepost/:id', middleware, viewSinglePost)
+router.get('/view/singlepost/post/:id', middleware, getSinglePostId)
 
-router.get('/view/allposts', middleware, viewAllPosts)
+router.get('/view/allposts/user/:id', middleware,getAllPostsByUserId)
+
+router.get('/view/allposts', middleware, getAllPosts)
 
 router.post('/createpost', middleware ,createPost)
 

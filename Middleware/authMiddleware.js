@@ -6,7 +6,8 @@ const middleware = (req, res, next) => {
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded)=> {
     if(err){
        return res.status(401).json({
-                    message: 'No token provided or token invalid.'
+                    status: "failure",
+                    message: 'No token provided or token invalid or token experied.'
                 })
     }
     else{
@@ -17,7 +18,8 @@ const middleware = (req, res, next) => {
     }
     else {
         return res.status(401).json({
-            message: 'No token provided or token invalid.'
+            status: "failure",
+            message: 'No token provided or token invalid or token experied.'
         })
     
 }

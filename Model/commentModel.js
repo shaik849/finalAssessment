@@ -10,13 +10,11 @@ const commentSchema = new Schema({
 })
 
 const commentsSchema = new Schema({
-    userId : { type: String, required : true},
-    comments :   {
-        type: mongoose.Types.ObjectId,
-        ref: 'commentSchema'
-        }
-})
-const commentModel = mongoose.model('comment', commentSchema)
+    postId : { type: String, required : true},
+    comments: [commentSchema]
+        
+},{timestamps: true})
+const commentModel = mongoose.model('Comment', commentSchema)
 const commentsModel = mongoose.model('Comments', commentsSchema)
 
 module.exports = {commentModel, commentsModel}
