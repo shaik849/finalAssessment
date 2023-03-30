@@ -19,10 +19,8 @@ const getSinglePostId = async (req, res) =>{
 
 const getAllPostsByUserId = async (req, res) =>{
     try{
-        const id = req.params.id
-        console.log(id)
+        const id = req.query.user
         const allPosts = await postModel.find({userId : id});
-        console.log(allPosts)
         if(allPosts.length > 0){
        return res.status(200).json({status: "success",posts : allPosts});
       }
@@ -37,8 +35,16 @@ catch(err){
 }
 
 const getAllPosts = async (req, res) =>{
+    const titleName = req.query.title
+    console.log(titleName)
     try{
-       const allPosts = await postModel.find();
+       const allPosts = await postModel.find({
+        "$or": [
+           {title :{
+            $regex :  "(?i)"+titleName
+           }}
+        ]
+       });
              if(allPosts){
               res.status(200).json(allPosts)
              }
