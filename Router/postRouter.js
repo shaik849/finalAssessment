@@ -6,7 +6,7 @@ const middleware = require('../Middleware/authMiddleware')
 
 router.get('/view/singlepost/post/:id', middleware, getSinglePostId)
 
-router.get('/view/allposts/user/:id', middleware,getAllPostsByUserId)
+router.get('/view/allposts/user/:id/:title', middleware,getAllPostsByUserId)
 
 router.get('/view/allposts', middleware, getAllPosts)
 

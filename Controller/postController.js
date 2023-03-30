@@ -19,8 +19,12 @@ const getSinglePostId = async (req, res) =>{
 
 const getAllPostsByUserId = async (req, res) =>{
     try{
-        const id = req.query.user
-        const allPosts = await postModel.find({userId : id});
+        const id = req.params.id;
+        const titleName = req.params.title
+        console.log(id)
+        const allPosts = await postModel.find({userId : id, title: {
+            $regex :  "(?i)"+titleName
+        }})
         if(allPosts.length > 0){
        return res.status(200).json({status: "success",posts : allPosts});
       }
@@ -39,12 +43,10 @@ const getAllPosts = async (req, res) =>{
     console.log(titleName)
     try{
        const allPosts = await postModel.find({
-        "$or": [
-           {title :{
+           title :{
             $regex :  "(?i)"+titleName
-           }}
-        ]
-       });
+           }
+       }).sort();
              if(allPosts){
               res.status(200).json(allPosts)
              }
