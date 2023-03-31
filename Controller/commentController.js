@@ -6,7 +6,6 @@ const createPostComment = async (req, res) => {
 try{
     const postId = req.params.id
     if(postId){
-        console.log(postId)
     const postAvalability = await postModel.findOne({_id : postId})
         if(postAvalability){
            const comment = new commentModel({
@@ -24,26 +23,20 @@ try{
                             }
                         })
                          if(addComments){
-
                           return res.status(200).json({ status: "success",message: "new Comment updated"})
                              }
-                             else{
                                 await allComments.save()
                                 return res.status(200).json({ status: "success",message: "Comment saved"})
-
-                             }
+                          
  }
- else{
          return   res.status(400).json({status: "failure",message:'saving comment'})
-         }
+         
         }
-        else{
             return res.status(400).json({status: "failure",message:`Could not find post or not found`})
-        }
+        
     }
-    else{
         return res.status(400).json({status: "failure",message:'post does not exist'})
-    }
+    
 }
 catch(err){
     console.log(err)
@@ -55,15 +48,13 @@ const showAllCommentsOfPost = async (req, res) => {
     try{
    const id = req.params.id
    if (!id){res.status(400).json({status: "failure",message: "id not found"})}
-   else{
     const comments = await commentsModel.findOne({_id :id});
     if (comments){
         res.status(200).json({status: "failure",comments : comments})
     }
-    else{
         res.status(400).json('comments does not exist')
-    }
-   }
+    
+   
 }
 catch(err){
     res.status(400).json({status: "failure",error: err.message})
@@ -75,7 +66,6 @@ const updateComment = async (req, res) =>{
          const commentId = req.params.commentId 
          const id = req.params.id
          if (!commentId && !id){res.status(404).json({status: "failure",message: "comment not found"})}
-         else{
           
                 const update = await commentModel.findOneAndUpdate({_id : commentId},{
                     $set : {
@@ -89,17 +79,11 @@ const updateComment = async (req, res) =>{
                       "comments.$.comment": update.comment
                     }
                 })
-                console.log(setComments)
                  if(setComments){
                   return res.status(200).json({ "status": "success","message": "new Comment updated"})
                      }
-                     else{
+                    
                    return res.status(400).json({status: "failure",message:`Invalid comment`})
-                     }
-            
-           
-         }
-
     }
     catch(err){
         res.status(400).json({status: "failure",error : err.message})
@@ -111,25 +95,20 @@ const deleteComment = async (req, res) => {
     const commentId = req.params.commentId 
     const id = req.params.id
     const comments = await commentModel.findOne({_id : commentId})
-    if (!comments)
-    {res.status(404).json({status: "failure",message: "comment not found"})
-}
-    else{
+    if (!comments){
+        res.status(404).json({status: "failure",message: "comment not found"})
+     }
         const deleteComment = await commentModel.findOneAndDelete({_id : commentId})
         const deleteComments = await commentsModel.findByIdAndUpdate({_id: id},{
             $pull:{
                 comments: {_id:req.params.commentId}
-            }
-          
+            }  
     })
-
         if(deleteComment && deleteComments){
            res.status(200).json({status: "success",message: "Comment deleted successfully"})
         }
-        else{
-            res.status(400).json({status: "failure",message:"cant delete comment"})
-        }
-    }
+        res.status(400).json({status: "failure",message:"cant delete comment"})
+    
 }
 catch(err){
     res.status(404).json({status: "failure", message: err.message})

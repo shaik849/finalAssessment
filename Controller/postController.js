@@ -8,9 +8,7 @@ const getSinglePostId = async (req, res) =>{
         if(singlePost){
        return res.status(200).json(singlePost);
      }
-     else{
         return res.status(400).json({status: "failure",message:"Couldnt find the post"})
-     }
     }
     catch(err){
       return  res.status(400).json({message: err.message});
@@ -29,7 +27,7 @@ const getAllPostsByUserId = async (req, res) =>{
                     title: {$regex :  "(?i)"+titleName}
                 },
                 {
-                    description: { $regex: "(?i)"+descriptionName}
+                    description: { $regex: "(?i)"+descriptionName} 
                 }
             ]
         }
@@ -37,9 +35,7 @@ const getAllPostsByUserId = async (req, res) =>{
         if(allPosts.length > 0){
        return res.status(200).json({status: "success",posts : allPosts});
       }
-     else{
         return res.status(400).json({status: "failure",message:'Couldnt find the posts'})
-     }
 }
 catch(err){
     return res.status(400).json({status:"failure",error : {message: err.message}});
@@ -57,11 +53,9 @@ const getAllPosts = async (req, res) =>{
            }
        }).sort({title : 1 });
              if(allPosts){
-              res.status(200).json(allPosts)
+              return res.status(200).json(allPosts)
              }
-             else{
                 return res.status(400).json({status: "failure",message:'Could not find the posts'})
-             }
     }
     catch(err){
         res.status(400).json({message: err.message});
@@ -79,15 +73,11 @@ const createPost = async (req, res) =>{
 
           if(postDetails){
           await postDetails.save();
-          res.status(200).json({status:"success",message: "post created successfully"})
+         return res.status(200).json({status:"success",message: "post created successfully"})
           }
-        
-        else{
             return res.status(400).json({status: "failure",message:"cant create post"})
-        }
-    }else{
-        return res.status(400).json({status: "failure",message:"user is not available"})
     }
+        return res.status(400).json({status: "failure",message:"user is not available"})
     }
 catch(err){
  return res.status(400).json({status: "failure",error: err.message});
@@ -109,12 +99,9 @@ const updatePost = async (req, res) => {
                if(updatePost){
              return  res.status(200).json({status: "success",message: "post is updated successfully"})
         }
-        else{
             res.status(400).json({status: "success",message:"cannot update post"})
-        }
-    }else{
-        res.status(400).json({status: "success",message:"user Id is not found"})
     }
+        res.status(400).json({status: "success",message:"user Id is not found"})
     }
     catch(err){
         res.status(400).json({status: "success",error: err.message})
@@ -130,9 +117,8 @@ const deletePost = async (req, res) => {
      if(result){
        return res.status(200).json({status: "success",message: "successfuly deleted"});
      }
-    }else{
-        return res.status(400).json({status: "success",error: err.message})
     }
+        return res.status(400).json({status: "success",error: err.message})
 }
     catch(err){
       return  res.status(400).json({status: "success",error: err.message});

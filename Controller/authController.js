@@ -12,7 +12,6 @@ const signUp = async (req, res) => {
         const doesExist = await Model.findOne({email: result.email})
         if(doesExist){
             return   res.status(400).json({"status": "failure","message": "email already exists"})
-
          }
         if(result){
            const reqData =  new Model(result)
@@ -22,9 +21,7 @@ const signUp = async (req, res) => {
            message : "data sent successfully",
          })
         }
-        else{
-              return res.status(400).json({"status": "failure","error": err.message})
-        }
+        return res.status(400).json({"status": "failure","error": err.message})
     }catch(err){
         return res.status(400).json({"status": "failure","error" : err.message})
     } 
@@ -41,9 +38,7 @@ const login = async (req, res) => {
          token : createToken(result._id)
      })
         }
-        else{
         res.status(401).json({"status": "failure",error: err.message})
-        }
 }
 catch(err){
     return res.status(400).json({"status": "failure",error : "check email or password"+ err })
@@ -64,11 +59,9 @@ const profile = async (req, res) => {
             role : profileData.role,    
      } })
     }
-    else{
         res.status(400).json({"status": "failure"})
-    }
     }catch(err){
-     return res.status(400).json({"status": "failure", error : "check the authentication "+ err })
+     return res.status(400).json({"status": "failure", error : err.message })
     }
 }
 

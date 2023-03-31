@@ -46,12 +46,9 @@ userSchema.pre('save', async function(next){
         if(auth){
             return user;
         }
-        else{
             throw Error("password error")
-        }
-    }else{
-        throw Error("user not found")
     }
+        throw Error("user not found")
 }
 
 
